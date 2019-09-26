@@ -1,0 +1,139 @@
+---
+title: "ggplot"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(ggridges)
+
+```
+
+```{r load_data, cache = TRUE}
+weather_df = 
+  rnoaa::meteo_pull_monitors(c("USW00094728", "USC00519397", "USS0023B17S"),
+                      var = c("PRCP", "TMIN", "TMAX"), 
+                      date_min = "2017-01-01",
+                      date_max = "2017-12-31") %>%
+  mutate(
+    name = recode(id, USW00094728 = "CentralPark_NY", 
+                      USC00519397 = "Waikiki_HA",
+                      USS0023B17S = "Waterhole_WA"),
+    tmin = tmin / 10,
+    tmax = tmax / 10) %>%
+  select(name, id, everything())
+
+```
+##create a ggplot
+```{r}
+ggplot(weather_df, aes(x= tmin, y = tmax)) + #definding the dataset itself, what's the x-axis, and what's the y-axis;
+  geom_point()
+```
+saving initial plots
+
+```{r}
+#weather_df %>% filter(name ==)
+scatterplot = 
+   weather_df %>% 
+  ggplot(aes(x= tmin, y = tmax)) + geom_point()
+
+scatterplot
+```
+
+adding color
+
+```{r}
+weather_df %>% 
+  ggplot(aes(x= tmin, y = tmax)) + 
+  geom_point(aes(color=name), alpha = 0.4) #alpha statemtn: adjusting the transparency, range[0,1]
+
+```
+why do 'aes' positions matter?
+
+```{r}
+weather_df %>% 
+  ggplot(aes(x= tmin, y = tmax)) + 
+  geom_point(aes(color=name), alpha = 0.4) +
+  geom_smooth(se.=FALSE) #giving a smooth curve about the scatterplot; #se.=FALSE about confidence interval
+```
+vs. 
+
+```{r}
+weather_df %>% 
+  ggplot(aes(x= tmin, y = tmax, color = name)) + 
+  geom_point(alpha = 0.4) +
+  geom_smooth(se = FALSE)  #giving a smooth curve about the scatterplot; #se =FALSE:get rid of the confidence interval shown in the graph
+  facet_grid(~ name) #facet_grid: separate the data by name
+```
+```{r}
+weather_df %>% 
+  ggplot(aes(x = date, y = tmax, color = name)) +
+  geom_point() +
+  geom_smooth(se = FALSE)
+```
+```{r}
+ggplot(weather_df, aes(x = date, y = tmax, color = name)) + 
+  geom_smooth(size =2, se = FALSE) 
+```
+
+2d density
+
+```{r}
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax)) +
+  geom_bin2d()
+  #geom_hex(): after install.packages("hexbin")
+
+```
+##more kinds of plots!
+```{r}
+weather_df %>% 
+  ggplot(aes(x = tmax, fill = name)) + #color: tells you the bar outside, if you want to color the inside part, use fill
+  geom_histogram() +
+  facet_grid(~name)
+
+```
+```{r}
+weather_df %>% 
+  ggplot(aes(x = tmax, fill = name)) +
+  geom_density(alpha = 0.3) 
+  #facet_grid(~name)
+```
+```{r}
+  ggplot(weather_df, aes(x = name, y = tmax)) + geom_boxplot()
+```
+```{r}
+ggplot(weather_df, aes(x = name, y = tmax)) + 
+  geom_violin(aes(fill = name), color = "blue", alpha = .5) + 
+  stat_summary(fun.y = median, geom = "point", color = "blue", size = 4)
+```
+
+```{r}
+weather_df %>% 
+ggplot(aes(x = tmax, y = name)) + 
+  geom_density_ridges(scale = .85)
+```
+
+## saving a plot
+
+```{r}
+ggp_ridge_temp = 
+  weather_df %>% 
+  ggplot(aes( x= tmax, y= name)) +
+  geom_density_ridges()
+
+ggsave("ggplot_temp_ridge.pdf",
+       ggp_ridge_temp)
+```
+
+```{r, fig.width = 12}
+weather_df %>% 
+  ggplot(aes(x = date, y = tmax, color = name)) +
+  geom_point(alpha = 0.4) +
+  geom_smooth(se = FALSE)
+
+
+```
+
