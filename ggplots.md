@@ -426,3 +426,40 @@ weather_df %>%
     ## 13 Waikiki_HA USC00519397 2017-10-21     0  30      NA
     ## 14 Waikiki_HA USC00519397 2017-10-22     0  30      NA
     ## 15 Waikiki_HA USC00519397 2017-12-22     0  26.7    NA
+
+more than one dataset
+---------------------
+
+``` r
+central_park = 
+  weather_df %>% 
+  filter (name == "CentralPark_NY")
+
+waikiki = 
+  weather_df %>% 
+  filter (name == "Waikiki_HA")
+
+ggplot(data = waikiki, aes (x = date, y = tmax, color = name)) +
+  geom_point(aes(size = prcp)) +
+  geom_line(data = central_park)
+```
+
+    ## Warning: Removed 3 rows containing missing values (geom_point).
+
+![](ggplots_files/figure-markdown_github/unnamed-chunk-24-1.png)
+
+bried aside about colors
+
+``` r
+waikiki %>% 
+  ggplot(aes (x = date, y = tmax)) + #to make the color red
+  geom_point(alpha = 0.5, color = "red") 
+```
+
+    ## Warning: Removed 3 rows containing missing values (geom_point).
+
+![](ggplots_files/figure-markdown_github/unnamed-chunk-25-1.png)
+
+``` r
+  # to get the specific color plots by stating it on geom_point under color statement
+```

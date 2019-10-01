@@ -232,3 +232,28 @@ weather_df %>%
   filter(is.na(tmin))
 ```
 
+## more than one dataset
+```{r}
+central_park = 
+  weather_df %>% 
+  filter (name == "CentralPark_NY")
+
+waikiki = 
+  weather_df %>% 
+  filter (name == "Waikiki_HA")
+
+ggplot(data = waikiki, aes (x = date, y = tmax, color = name)) +
+  geom_point(aes(size = prcp)) +
+  geom_line(data = central_park)
+```
+
+bried aside about colors
+
+```{r}
+waikiki %>% 
+  ggplot(aes (x = date, y = tmax)) + #to make the color red
+  geom_point(alpha = 0.5, color = "red") 
+  # to get the specific color plots by stating it on geom_point under color statement
+
+```
+
