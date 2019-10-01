@@ -137,3 +137,98 @@ weather_df %>%
 
 ```
 
+## Making more plots
+```{r}
+weather_df %>% 
+  ggplot (aes(x = tmin, y = tmax, color = name)) +
+  geom_point(alpha = 0.5)
+```
+
+adding labels:
+
+```{r}
+weather_df %>% 
+  ggplot (aes(x = tmin, y = tmax, color = name)) +
+  geom_point(alpha = 0.5) +
+  labs(
+    title = "Temperature Plot",
+    x = "Minimum Temp (C)",
+    y = "Maximum Temp (C)",
+    caption = "Data from NOAA via rnoaa package"
+    )
+```
+
+x axis tick marks etc
+
+```{r}
+weather_df %>% 
+  ggplot (aes(x = tmin, y = tmax, color = name)) +
+  geom_point(alpha = 0.5) +
+  labs(
+    title = "Temperature Plot",
+    x = "Minimum Temp (C)",
+    y = "Maximum Temp (C)",
+    caption = "Data from NOAA via rnoaa package"
+  ) +
+  scale_x_continuous(
+    breaks = c(-15, -5, 20),
+    labels = c("-15C", "-5(still too cold)", "20")
+  ) +
+  scale_y_sqrt()
+#scale_y_continuous( trans = "sqrt") doing the same thing: transforming the function into the sqaure root
+
+```
+change the default color using scale_color_hue
+```{r}
+weather_df %>% 
+  ggplot (aes(x = tmin, y = tmax, color = name)) +
+  geom_point(alpha = 0.5) +
+  labs(
+    title = "Temperature Plot",
+    x = "Minimum Temp (C)",
+    y = "Maximum Temp (C)",
+    caption = "Data from NOAA via rnoaa package"
+  ) +
+  scale_color_hue(
+    name = "Weather Station", #naming the color reference table, called legand
+    h = c(50,250) #changing the value here to adjust the color of the plot
+  )
+```
+```{r}
+ggp_base = 
+weather_df %>% 
+  ggplot (aes(x = tmin, y = tmax, color = name)) +
+  geom_point(alpha = 0.5) +
+  labs(
+    title = "Temperature Plot",
+    x = "Minimum Temp (C)",
+    y = "Maximum Temp (C)",
+    caption = "Data from NOAA via rnoaa package"
+  ) +
+ viridis::scale_color_viridis(
+    name = "Location", 
+    discrete = TRUE
+ )
+
+ggp_base
+```
+
+##themes
+
+```{r}
+ggp_base +
+  theme (legend.position = "bottom") #put the legend on the bottom of the plot
+```
+```{r}
+ggp_base +
+  theme_minimal() + #erasing the grey background color
+  theme(legend.position = "bottom")
+#the order matters! if do the theme(legend.position) first, the plot will first put the legend on the bottom, but when it goes to the next argument, the theme_Minimal, the legend will go back on the right side of the plot.
+```
+
+
+```{r}
+weather_df %>% 
+  filter(is.na(tmin))
+```
+

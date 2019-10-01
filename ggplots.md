@@ -269,3 +269,160 @@ weather_df %>%
     ## Warning: Removed 3 rows containing missing values (geom_point).
 
 ![](ggplots_files/figure-markdown_github/unnamed-chunk-15-1.png)
+
+Making more plots
+-----------------
+
+``` r
+weather_df %>% 
+  ggplot (aes(x = tmin, y = tmax, color = name)) +
+  geom_point(alpha = 0.5)
+```
+
+    ## Warning: Removed 15 rows containing missing values (geom_point).
+
+![](ggplots_files/figure-markdown_github/unnamed-chunk-16-1.png)
+
+adding labels:
+
+``` r
+weather_df %>% 
+  ggplot (aes(x = tmin, y = tmax, color = name)) +
+  geom_point(alpha = 0.5) +
+  labs(
+    title = "Temperature Plot",
+    x = "Minimum Temp (C)",
+    y = "Maximum Temp (C)",
+    caption = "Data from NOAA via rnoaa package"
+    )
+```
+
+    ## Warning: Removed 15 rows containing missing values (geom_point).
+
+![](ggplots_files/figure-markdown_github/unnamed-chunk-17-1.png)
+
+x axis tick marks etc
+
+``` r
+weather_df %>% 
+  ggplot (aes(x = tmin, y = tmax, color = name)) +
+  geom_point(alpha = 0.5) +
+  labs(
+    title = "Temperature Plot",
+    x = "Minimum Temp (C)",
+    y = "Maximum Temp (C)",
+    caption = "Data from NOAA via rnoaa package"
+  ) +
+  scale_x_continuous(
+    breaks = c(-15, -5, 20),
+    labels = c("-15C", "-5(still too cold)", "20")
+  ) +
+  scale_y_sqrt()
+```
+
+    ## Warning in self$trans$transform(x): NaNs produced
+
+    ## Warning: Transformation introduced infinite values in continuous y-axis
+
+    ## Warning: Removed 90 rows containing missing values (geom_point).
+
+![](ggplots_files/figure-markdown_github/unnamed-chunk-18-1.png)
+
+``` r
+#scale_y_continuous( trans = "sqrt") doing the same thing: transforming the function into the sqaure root
+```
+
+change the default color using scale\_color\_hue
+
+``` r
+weather_df %>% 
+  ggplot (aes(x = tmin, y = tmax, color = name)) +
+  geom_point(alpha = 0.5) +
+  labs(
+    title = "Temperature Plot",
+    x = "Minimum Temp (C)",
+    y = "Maximum Temp (C)",
+    caption = "Data from NOAA via rnoaa package"
+  ) +
+  scale_color_hue(
+    name = "Weather Station", #naming the color reference table, called legand
+    h = c(50,250) #changing the value here to adjust the color of the plot
+  )
+```
+
+    ## Warning: Removed 15 rows containing missing values (geom_point).
+
+![](ggplots_files/figure-markdown_github/unnamed-chunk-19-1.png)
+
+``` r
+ggp_base = 
+weather_df %>% 
+  ggplot (aes(x = tmin, y = tmax, color = name)) +
+  geom_point(alpha = 0.5) +
+  labs(
+    title = "Temperature Plot",
+    x = "Minimum Temp (C)",
+    y = "Maximum Temp (C)",
+    caption = "Data from NOAA via rnoaa package"
+  ) +
+ viridis::scale_color_viridis(
+    name = "Location", 
+    discrete = TRUE
+ )
+
+ggp_base
+```
+
+    ## Warning: Removed 15 rows containing missing values (geom_point).
+
+![](ggplots_files/figure-markdown_github/unnamed-chunk-20-1.png)
+
+themes
+------
+
+``` r
+ggp_base +
+  theme (legend.position = "bottom") #put the legend on the bottom of the plot
+```
+
+    ## Warning: Removed 15 rows containing missing values (geom_point).
+
+![](ggplots_files/figure-markdown_github/unnamed-chunk-21-1.png)
+
+``` r
+ggp_base +
+  theme_minimal() + #erasing the grey background color
+  theme(legend.position = "bottom")
+```
+
+    ## Warning: Removed 15 rows containing missing values (geom_point).
+
+![](ggplots_files/figure-markdown_github/unnamed-chunk-22-1.png)
+
+``` r
+#the order matters! if do the theme(legend.position) first, the plot will first put the legend on the bottom, but when it goes to the next argument, the theme_Minimal, the legend will go back on the right side of the plot.
+```
+
+``` r
+weather_df %>% 
+  filter(is.na(tmin))
+```
+
+    ## # A tibble: 15 x 6
+    ##    name       id          date        prcp  tmax  tmin
+    ##    <chr>      <chr>       <date>     <dbl> <dbl> <dbl>
+    ##  1 Waikiki_HA USC00519397 2017-04-17     5  28.3    NA
+    ##  2 Waikiki_HA USC00519397 2017-05-09    NA  NA      NA
+    ##  3 Waikiki_HA USC00519397 2017-05-26    NA  NA      NA
+    ##  4 Waikiki_HA USC00519397 2017-07-19    NA  NA      NA
+    ##  5 Waikiki_HA USC00519397 2017-10-07     0  31.1    NA
+    ##  6 Waikiki_HA USC00519397 2017-10-09     0  28.9    NA
+    ##  7 Waikiki_HA USC00519397 2017-10-10    10  31.7    NA
+    ##  8 Waikiki_HA USC00519397 2017-10-12     0  31.1    NA
+    ##  9 Waikiki_HA USC00519397 2017-10-13     0  31.1    NA
+    ## 10 Waikiki_HA USC00519397 2017-10-16     5  30      NA
+    ## 11 Waikiki_HA USC00519397 2017-10-18     0  29.4    NA
+    ## 12 Waikiki_HA USC00519397 2017-10-20    13  30.6    NA
+    ## 13 Waikiki_HA USC00519397 2017-10-21     0  30      NA
+    ## 14 Waikiki_HA USC00519397 2017-10-22     0  30      NA
+    ## 15 Waikiki_HA USC00519397 2017-12-22     0  26.7    NA
