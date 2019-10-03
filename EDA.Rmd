@@ -35,3 +35,29 @@ weather_df =
   select(name, id, date, month, everything())
 ```
 
+## group_by and counting
+
+```{r}
+weather_df %>% 
+  group_by (name, month)
+```
+```{r}
+weather_df %>% 
+  group_by(name) %>% 
+  summarize(n_obs = n()) #summary of the number of observations, getting a new data frame, grouped by name
+
+weather_df %>% 
+  group_by(month) %>%  #get the numbers of observations groupped by month
+  summarize(
+    n_obs = n(),
+    n_unique = n_distinct(date)) #turns out showing how many unique days here in the dataframe
+```
+
+```{r}
+weather_df %>% 
+  count(name) #equate to group_by(name) + summarize(n_obs=n())
+
+weather_df %>% 
+  count(name, month) #equate to group_by(name, month)
+```
+
